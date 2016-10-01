@@ -1,11 +1,11 @@
 extends layout
 
 block content
-    h1 Read
-    form
-        label(for='update-id') ID 
-        input#update-id(type='text')
+    h1 Update
+    form(method='post')
+        label(for='old-name') Old name
+        input#old-name(type='text' name='oldName')
         br
-        label(for='update-value') Name
-        input#update-value(type='text' name='updateValue')
+        label(for='new-name') New name
+        input#new-name(type='text' name='newName')
         button Update
