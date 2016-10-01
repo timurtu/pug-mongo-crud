@@ -1,0 +1,11 @@
+extends layout
+
+block content
+    h1 Read
+    form
+        label(for='update-id') ID 
+        input#update-id(type='text')
+        br
+        label(for='update-value') Name
+        input#update-value(type='text' name='updateValue')
+        button Update
