@@ -28,8 +28,6 @@ ul {
 a {
     color: #00B7FF;
     text-decoration: none;
-    transition: .4s ease all;
-    -webkit-transition: .4s ease all;
 }
 
 a:hover {
@@ -47,8 +45,6 @@ nav ul {
     background: darkslateblue;
     opacity: .9;
     box-shadow: 0 1px 1px rgba(20, 20, 20, .125);
-    transition: .2s ease all;
-    -webkit-transition: .2s ease all;
 }
 
 nav ul:hover {
