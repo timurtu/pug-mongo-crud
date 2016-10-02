@@ -1,40 +1,28 @@
 const express = require('express')
 const router = express.Router()
 const log = require('gutil-color-log')
-const P = require('bluebird')
-const MongoClient = P.promisifyAll(require('mongodb').MongoClient)
+const MongoClient = require('mongodb').MongoClient
+const ObjectID = require('mongodb').ObjectID
+const co = require('co')
+const globals = require('../globals')
 
 
 router.get('/', (req, res) => res.render('update'))
 
-router.post('/', (req, res) => {
+router.post('/', (req, res) => co(function*() {
   
-  const oldName = req.body.oldName
-  const newName = req.body.newName
+  const updateID = req.body.updateID
+  const updateValue = req.body.updateValue
   
-  if (oldName && newName) {
+  if (updateID && updateValue) {
     
-    MongoClient.connectAsync('mongodb://localhost:27017/crud')
-      .then(db => {
-        
-        const c = db.collection('crud')
-        
-        return c.findOne({ name: oldName })
-          .then(one => {
-            
-            if (one) {
-              res.redirect('/')
-              return c.updateOne({ name: oldName }, { $set: { name: newName } })
-                .then(() => db.close())
-            } else {
-              res.render('error', { message: `Name ${oldName} not found.` })
-              db.close()
-            }
-          })
-          .then(() => db.close())
-      })
-      .catch(e => log('red', e))
+    res.redirect('/')
+    
+    const db = yield MongoClient.connect(globals.url)
+    yield db.collection('crud').updateOne({ _id: new ObjectID(updateID) }, { name: updateValue })
+    
+    db.close()
   }
-})
+}).catch(e => log('red', e)))
 
 module.exports = router

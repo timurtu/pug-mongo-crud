@@ -2,7 +2,7 @@ extends layout
 
 block content
     h1 Destroy
-    form
+    form(method='post')
         label(for='destroy-id') ID
-        input#destroy-id(type='text')
+        input#destroy-id(type='text' name='destroyID')
         button Destroy

@@ -1,40 +1,31 @@
 const express = require('express')
 const router = express.Router()
 const log = require('gutil-color-log')
-const P = require('bluebird')
-const MongoClient = P.promisifyAll(require('mongodb').MongoClient)
+const MongoClient = require('mongodb').MongoClient
+const ObjectID = require('mongodb').ObjectID
+const co = require('co')
+const globals = require('../globals')
 
 
 router.get('/', (req, res) => res.render('read'))
 
-router.post('/', (req, res) => {
+router.post('/', (req, res) => co(function*() {
   
-  const name = req.body.readName
+  const id = req.body.readID
   
-  if (name) {
-  
-    log('green', name)
+  if (id) {
     
-    MongoClient.connectAsync('mongodb://localhost:27017/crud')
-      .then(db => {
-        
-        const c = db.collection('crud')
-        
-        return c.findOne({ name })
-          .then(one => {
-            
-            log('cyan', one)
-            
-            if (one) {
-              res.render('read', { found: one })
-            } else {
-              res.render('error', { message: `Name ${name} not found.` })
-            }
-          })
-          .then(() => db.close())
-      })
-      .catch(e => log('red', e))
+    const db = yield MongoClient.connect(globals.url)
+    
+    try {
+      const doc = yield db.collection('crud').findOne({ _id: new ObjectID(id) })
+      res.render('read', { found: doc })
+    } catch (e) {
+      res.render('error', { message: `ID ${id} not found.` })
+    }
+    
+    db.close()
   }
-})
+}).catch(e => log('red', e)))
 
 module.exports = router

@@ -1,0 +1,13 @@
+extends layout
+
+block content
+    h1= doc.name
+    p= doc._id
+    form(method='post')
+        input(value=doc.name name='name')
+        button Change
+    a(href='/destroy/#{doc._id}')
+        button Delete
+    label(for='create-comment')
+    input(id='create-comment' name='comment')
+    button Comment

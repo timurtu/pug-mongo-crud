@@ -1,7 +1,10 @@
 extends layout
 
 block content
-  h1 Index
-  ul
-    each name in names
-      li= name
+    h1 Index
+    ul
+        each doc in docs
+            a(href='view/#{doc._id}')
+                li(id=doc._id)
+                    form(method='get')
+                        h3= doc.name
